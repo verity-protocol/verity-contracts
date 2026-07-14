@@ -1,0 +1,72 @@
+#![no_std]
+
+use soroban_sdk::{contract, contracterror, contractimpl, Bytes, Env, Vec};
+
+// ---------------------------------------------------------------------------
+// Errors
+// ---------------------------------------------------------------------------
+
+#[contracterror]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[repr(u32)]
+pub enum Error {
+    /// The submitted proof failed verification.
+    InvalidProof = 1,
+    /// The proof uses an unsupported elliptic curve.
+    UnsupportedCurve = 2,
+}
+
+// ---------------------------------------------------------------------------
+// Contract
+// ---------------------------------------------------------------------------
+
+/// ZK Verifier contract — verifies zero-knowledge proofs on-chain.
+///
+/// This contract verifies Noir-generated ZK proofs using BN254 elliptic
+/// curve host functions introduced in Stellar Protocol 25 (X-Ray) and
+/// Protocol 26 (Yardstick).
+///
+/// The verification key is stored at deployment and corresponds to a
+/// specific Noir circuit. Each circuit (e.g., "over 18", "passed KYC")
+/// has its own verification key.
+///
+/// ## How it works:
+/// 1. User generates a ZK proof off-chain using a Noir circuit
+/// 2. The proof + public inputs are submitted to this contract
+/// 3. The contract verifies the proof against the stored verification key
+/// 4. Returns true/false — the on-chain result is tamper-proof
+///
+/// ## Host functions used:
+/// - `env.crypto().bn254_*` — BN254 curve operations (Protocol 25+)
+/// - Multi-scalar multiplication for pairing checks
+/// - Poseidon hashing for transcript generation
+#[contract]
+pub struct ZkVerifier;
+
+#[contractimpl]
+impl ZkVerifier {
+    /// Verify a ZK proof against the stored verification key.
+    ///
+    /// # Arguments
+    /// * `proof` — The serialized ZK proof bytes (BN254 curve points)
+    /// * `public_inputs` — The public inputs to the circuit (e.g., commitment hash,
+    ///   nullifier, merkle root). These are verified as part of the proof.
+    ///
+    /// # Returns
+    /// `true` if the proof is valid, `false` otherwise.
+    ///
+    /// # Panics
+    /// Panics if the proof is malformed or the verification key is not set.
+    pub fn verify_proof(
+        _env: Env,
+        _proof: Bytes,
+        _public_inputs: Vec<Bytes>,
+    ) -> Result<bool, Error> {
+        // TODO: Load verification key from instance storage
+        // TODO: Deserialize the proof into BN254 curve points
+        // TODO: Hash public inputs using Poseidon
+        // TODO: Perform pairing check using BN254 host functions
+        // TODO: Return verification result
+        todo!("verify_proof: implement BN254 proof verification")
+    }
+}
