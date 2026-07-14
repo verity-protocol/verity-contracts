@@ -1,0 +1,19 @@
+[package]
+name = "verity_nullifier"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+rust-version = "1.84.0"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+doctest = false
+
+[features]
+testutils = []
+
+[dependencies]
+soroban-sdk = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }
