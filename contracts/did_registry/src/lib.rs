@@ -1,54 +1,11 @@
 #![no_std]
 
-use soroban_sdk::{contract, contracterror, contractimpl, contracttype, Address, Env, Vec};
+mod events;
+mod storage;
+#[cfg(test)]
+mod test;
 
-// ---------------------------------------------------------------------------
-// Data Structures
-// ---------------------------------------------------------------------------
-
-/// The on-chain identity record for a single DID.
-///
-/// Each DID is a permanent entry on the Stellar ledger that exists independently
-/// of any wallet address. One DID can have multiple wallets linked to it.
-#[contracttype]
-#[derive(Clone, Debug, PartialEq)]
-pub struct DidRecord {
-    /// The address that identifies this DID on-chain.
-    pub did_address: Address,
-    /// The wallet address that originally created this DID.
-    pub owner: Address,
-    /// Ledger timestamp when the DID was created.
-    pub created_at: u64,
-    /// Whether a trusted KYC provider has verified this DID.
-    /// Set to true after a credential is issued by an approved issuer.
-    pub is_verified: bool,
-}
-
-/// Typed storage keys for the DID Registry contract.
-///
-/// Soroban uses typed enums for storage keys to prevent key collisions.
-/// Each variant maps to a specific piece of on-chain state.
-#[contracttype]
-#[derive(Clone, Debug, PartialEq)]
-pub enum DataKey {
-    /// Maps a wallet address to the DID it is linked to.
-    /// This is the primary lookup — a wallet owner calls this to find their DID.
-    WalletToDid(Address),
-
-    /// Maps a DID address to its full record.
-    DidToRecord(Address),
-
-    /// Maps a DID address to the list of wallets linked to it.
-    /// Supports wallet rotation: users can add/remove wallets without losing identity.
-    LinkedWallets(Address),
-
-    /// Global counter of total DIDs created. Used for indexing and analytics.
-    DidCount,
-
-    /// The admin address that pays base reserve fees for DID creation.
-    /// This is the Verity backend — users never pay for DID creation.
-    Admin,
-}
+use soroban_sdk::{contract, contracterror, contractimpl, Address, Env, Vec};
 
 // ---------------------------------------------------------------------------
 // Errors
@@ -94,8 +51,12 @@ impl DidRegistry {
     ///
     /// Called once at contract deployment.
     pub fn __constructor(env: Env, admin: Address) {
-        env.storage().instance().set(&DataKey::Admin, &admin);
-        env.storage().instance().set(&DataKey::DidCount, &0u32);
+        env.storage()
+            .instance()
+            .set(&storage::DataKey::Admin, &admin);
+        env.storage()
+            .instance()
+            .set(&storage::DataKey::DidCount, &0u32);
     }
 
     /// Create a new DID and link the caller's wallet to it.
@@ -172,19 +133,14 @@ impl DidRegistry {
     ///
     /// Returns None if the wallet has no DID.
     pub fn get_did_for_wallet(env: Env, wallet: Address) -> Option<Address> {
-        env.storage()
-            .persistent()
-            .get(&DataKey::WalletToDid(wallet))
+        storage::get_did_for_wallet(&env, &wallet)
     }
 
     /// Get all wallet addresses linked to a DID.
     ///
     /// Used by the frontend dashboard to show the user all their linked wallets.
     pub fn get_linked_wallets(env: Env, did: Address) -> Vec<Address> {
-        env.storage()
-            .persistent()
-            .get(&DataKey::LinkedWallets(did))
-            .unwrap_or_else(|| soroban_sdk::Vec::new(&env))
+        storage::get_linked_wallets(&env, &did)
     }
 
     /// Check whether a DID has been verified by a trusted KYC provider.
@@ -193,12 +149,7 @@ impl DidRegistry {
     /// to check a user's verification status. They never see wallet addresses
     /// or personal details — only this boolean.
     pub fn is_verified(env: Env, did: Address) -> bool {
-        let record: Option<DidRecord> = env.storage().persistent().get(&DataKey::DidToRecord(did));
-
-        match record {
-            Some(r) => r.is_verified,
-            None => false,
-        }
+        storage::is_verified(&env, &did)
     }
 
     /// Set the verification status of a DID.
@@ -216,9 +167,3 @@ impl DidRegistry {
         todo!("set_verified: implement verification status update")
     }
 }
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
-
-mod test;

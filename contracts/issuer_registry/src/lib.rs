@@ -1,5 +1,10 @@
 #![no_std]
 
+mod events;
+mod storage;
+#[cfg(test)]
+mod test;
+
 use soroban_sdk::{contract, contracterror, contractimpl, Address, Env, Vec};
 
 // ---------------------------------------------------------------------------
@@ -27,18 +32,6 @@ pub enum Error {
 /// Only issuers registered in this contract can write credentials to the
 /// Credential contract. The admin (Verity backend) controls which KYC
 /// providers are approved.
-///
-/// ## How it works:
-/// 1. Verity onboards a KYC provider (e.g., Smile ID, Persona)
-/// 2. Admin calls `add_issuer` to register the provider's Stellar address
-/// 3. When the KYC provider verifies a user, they call the Credential contract
-/// 4. The Credential contract cross-checks this registry to confirm authorization
-/// 5. Admin can revoke a provider's approval via `remove_issuer`
-///
-/// ## Admin model:
-/// The admin is set at deployment (constructor argument). Only the admin
-/// can add or remove issuers. This is a permissioned registry — not
-/// decentralized — because KYC providers must be vetted and trusted.
 #[contract]
 pub struct IssuerRegistry;
 

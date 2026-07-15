@@ -1,5 +1,10 @@
 #![no_std]
 
+mod events;
+mod storage;
+#[cfg(test)]
+mod test;
+
 use soroban_sdk::{contract, contracterror, contractimpl, BytesN, Env};
 
 // ---------------------------------------------------------------------------
@@ -24,21 +29,6 @@ pub enum Error {
 /// derived from their real-world identity (e.g., a Poseidon hash of their
 /// document commitment). This hash is stored on-chain to prevent the same
 /// person from creating multiple DIDs.
-///
-/// ## How it works:
-/// 1. User generates a nullifier hash off-chain from their identity commitment
-/// 2. On DID creation, the nullifier is checked against this contract
-/// 3. If the nullifier already exists, DID creation is rejected
-/// 4. If the nullifier is new, it is stored and DID creation proceeds
-///
-/// ## Privacy note:
-/// The nullifier hash is a Poseidon hash — it cannot be reversed to reveal
-/// the original document or identity data. It only proves "this identity
-/// has already been used" without revealing which identity.
-///
-/// ## Cross-contract integration:
-/// The DID Registry contract calls `check_nullifier` before creating a DID,
-/// and `store_nullifier` after successful creation.
 #[contract]
 pub struct NullifierContract;
 
