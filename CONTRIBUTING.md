@@ -12,7 +12,7 @@ Thanks for your interest in contributing to Verity! This guide covers how to pic
 **Definition of "done":**
 - The function compiles and passes `cargo check`
 - At least one test covers the new function
-- `cargo fmt -- --check` passes
+- `cargo fmt --check` passes
 - `cargo clippy -- -D warnings` passes
 - The PR is reviewed and merged
 
@@ -43,7 +43,7 @@ git checkout -b feat/did-registry-create-did
 All code must pass `rustfmt` with default settings:
 
 ```bash
-cargo fmt -- --check
+cargo fmt --check
 ```
 
 ### Linting
