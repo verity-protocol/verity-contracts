@@ -1,5 +1,10 @@
 #![no_std]
 
+mod events;
+mod storage;
+#[cfg(test)]
+mod test;
+
 use soroban_sdk::{contract, contracterror, contractimpl, Bytes, Env, Vec};
 
 // ---------------------------------------------------------------------------
@@ -29,17 +34,6 @@ pub enum Error {
 /// The verification key is stored at deployment and corresponds to a
 /// specific Noir circuit. Each circuit (e.g., "over 18", "passed KYC")
 /// has its own verification key.
-///
-/// ## How it works:
-/// 1. User generates a ZK proof off-chain using a Noir circuit
-/// 2. The proof + public inputs are submitted to this contract
-/// 3. The contract verifies the proof against the stored verification key
-/// 4. Returns true/false — the on-chain result is tamper-proof
-///
-/// ## Host functions used:
-/// - `env.crypto().bn254_*` — BN254 curve operations (Protocol 25+)
-/// - Multi-scalar multiplication for pairing checks
-/// - Poseidon hashing for transcript generation
 #[contract]
 pub struct ZkVerifier;
 
@@ -54,9 +48,6 @@ impl ZkVerifier {
     ///
     /// # Returns
     /// `true` if the proof is valid, `false` otherwise.
-    ///
-    /// # Panics
-    /// Panics if the proof is malformed or the verification key is not set.
     pub fn verify_proof(
         _env: Env,
         _proof: Bytes,
@@ -66,6 +57,7 @@ impl ZkVerifier {
         // TODO: Deserialize the proof into BN254 curve points
         // TODO: Hash public inputs using Poseidon
         // TODO: Perform pairing check using BN254 host functions
+        // TODO: Emit ProofVerified event
         // TODO: Return verification result
         todo!("verify_proof: implement BN254 proof verification")
     }
