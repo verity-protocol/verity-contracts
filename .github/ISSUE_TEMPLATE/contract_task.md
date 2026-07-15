@@ -31,7 +31,7 @@ assignees: ''
 
 - [ ] Function compiles and passes `cargo check`
 - [ ] At least one test covers the new/changed function
-- [ ] `cargo fmt -- --check` passes
+- [ ] `cargo fmt --check` passes
 - [ ] `cargo clippy -- -D warnings` passes
 - [ ] Doc comments added for public functions
 

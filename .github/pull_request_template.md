@@ -18,7 +18,7 @@
 
 - [ ] `cargo check` passes
 - [ ] `cargo test` passes
-- [ ] `cargo fmt -- --check` passes
+- [ ] `cargo fmt --check` passes
 - [ ] `cargo clippy -- -D warnings` passes
 - [ ] No secrets or private keys committed
 - [ ] Doc comments added for new public functions

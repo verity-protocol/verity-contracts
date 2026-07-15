@@ -94,7 +94,7 @@ cargo test
 ### Lint
 
 ```bash
-cargo fmt -- --check
+cargo fmt --check
 cargo clippy -- -D warnings
 ```
 
