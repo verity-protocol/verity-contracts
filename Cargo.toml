@@ -13,6 +13,7 @@ members = [
 version = "0.0.0"
 edition = "2021"
 publish = false
+license = "MIT"
 
 [workspace.dependencies]
 soroban-sdk = { version = "27.0.0" }
