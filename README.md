@@ -107,23 +107,44 @@ verity-contracts/
 │   ├── did_registry/                   # Core identity contract
 │   │   ├── Cargo.toml
 │   │   └── src/
-│   │       ├── lib.rs                  # Data structures + function signatures
-│   │       └── test.rs                 # Tests (2 implemented)
+│   │       ├── lib.rs                  # Contract entry points
+│   │       ├── storage.rs              # DataKey enum, record structs, storage helpers
+│   │       ├── events.rs               # Event types and emit helpers
+│   │       └── test.rs                 # Unit tests (Soroban convention)
 │   ├── credential/                     # Credential storage contract
 │   │   ├── Cargo.toml
-│   │   └── src/lib.rs                  # Data structures + function signatures
+│   │   └── src/
+│   │       ├── lib.rs                  # Contract entry points
+│   │       ├── storage.rs              # DataKey enum, record structs, storage helpers
+│   │       ├── events.rs               # Event types and emit helpers
+│   │       └── test.rs                 # Unit tests
 │   ├── zk_verifier/                    # ZK proof verification
 │   │   ├── Cargo.toml
-│   │   └── src/lib.rs                  # Stub with TODO comments
+│   │   └── src/
+│   │       ├── lib.rs                  # Contract entry points
+│   │       ├── storage.rs              # DataKey enum, storage helpers
+│   │       ├── events.rs               # Event types and emit helpers
+│   │       └── test.rs                 # Unit tests
 │   ├── nullifier/                      # Sybil resistance
 │   │   ├── Cargo.toml
-│   │   └── src/lib.rs                  # Stub with TODO comments
+│   │   └── src/
+│   │       ├── lib.rs                  # Contract entry points
+│   │       ├── storage.rs              # DataKey enum, storage helpers
+│   │       ├── events.rs               # Event types and emit helpers
+│   │       └── test.rs                 # Unit tests
 │   └── issuer_registry/                # KYC provider management
 │       ├── Cargo.toml
-│       └── src/lib.rs                  # Stub with TODO comments
+│       └── src/
+│           ├── lib.rs                  # Contract entry points
+│           ├── storage.rs              # DataKey enum, storage helpers
+│           ├── events.rs               # Event types and emit helpers
+│           └── test.rs                 # Unit tests
 ├── README.md
 ├── CONTRIBUTING.md
+├── LICENSE
 └── .github/
+    ├── workflows/
+    │   └── ci.yml                      # CI: check, test, fmt, clippy
     ├── ISSUE_TEMPLATE/
     │   ├── bug_report.md
     │   ├── feature_request.md
