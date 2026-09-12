@@ -1,6 +1,6 @@
 #![allow(dead_code, deprecated)]
 
-use soroban_sdk::{contracttype, Address, Env, Symbol};
+use soroban_sdk::{contracttype, Address, BytesN, Env, Symbol};
 
 // ---------------------------------------------------------------------------
 // Event Types
@@ -10,8 +10,8 @@ use soroban_sdk::{contracttype, Address, Env, Symbol};
 #[contracttype]
 #[derive(Clone, Debug, PartialEq)]
 pub struct DidCreatedEvent {
-    /// The newly created DID address.
-    pub did_address: Address,
+    /// The newly created DID identifier.
+    pub did_id: BytesN<32>,
     /// The wallet that created the DID.
     pub owner: Address,
     /// Ledger timestamp of creation.
@@ -23,7 +23,7 @@ pub struct DidCreatedEvent {
 #[derive(Clone, Debug, PartialEq)]
 pub struct WalletLinkedEvent {
     /// The DID the wallet was linked to.
-    pub did_address: Address,
+    pub did_id: BytesN<32>,
     /// The wallet address that was linked.
     pub wallet_address: Address,
 }
@@ -33,7 +33,7 @@ pub struct WalletLinkedEvent {
 #[derive(Clone, Debug, PartialEq)]
 pub struct WalletUnlinkedEvent {
     /// The DID the wallet was unlinked from.
-    pub did_address: Address,
+    pub did_id: BytesN<32>,
     /// The wallet address that was unlinked.
     pub wallet_address: Address,
 }
@@ -43,7 +43,7 @@ pub struct WalletUnlinkedEvent {
 #[derive(Clone, Debug, PartialEq)]
 pub struct VerificationStatusChangedEvent {
     /// The DID whose status changed.
-    pub did_address: Address,
+    pub did_id: BytesN<32>,
     /// The new verification status.
     pub is_verified: bool,
 }
@@ -53,9 +53,9 @@ pub struct VerificationStatusChangedEvent {
 // ---------------------------------------------------------------------------
 
 #[allow(dead_code)]
-pub fn publish_did_created(env: &Env, did: &Address, owner: &Address, created_at: u64) {
+pub fn publish_did_created(env: &Env, did: &BytesN<32>, owner: &Address, created_at: u64) {
     let event = DidCreatedEvent {
-        did_address: did.clone(),
+        did_id: did.clone(),
         owner: owner.clone(),
         created_at,
     };
@@ -64,9 +64,9 @@ pub fn publish_did_created(env: &Env, did: &Address, owner: &Address, created_at
 }
 
 /// Publish a WalletLinked event.
-pub fn publish_wallet_linked(env: &Env, did: &Address, wallet: &Address) {
+pub fn publish_wallet_linked(env: &Env, did: &BytesN<32>, wallet: &Address) {
     let event = WalletLinkedEvent {
-        did_address: did.clone(),
+        did_id: did.clone(),
         wallet_address: wallet.clone(),
     };
     env.events()
@@ -74,9 +74,9 @@ pub fn publish_wallet_linked(env: &Env, did: &Address, wallet: &Address) {
 }
 
 /// Publish a WalletUnlinked event.
-pub fn publish_wallet_unlinked(env: &Env, did: &Address, wallet: &Address) {
+pub fn publish_wallet_unlinked(env: &Env, did: &BytesN<32>, wallet: &Address) {
     let event = WalletUnlinkedEvent {
-        did_address: did.clone(),
+        did_id: did.clone(),
         wallet_address: wallet.clone(),
     };
     env.events()
@@ -84,9 +84,9 @@ pub fn publish_wallet_unlinked(env: &Env, did: &Address, wallet: &Address) {
 }
 
 /// Publish a VerificationStatusChanged event.
-pub fn publish_verification_status_changed(env: &Env, did: &Address, is_verified: bool) {
+pub fn publish_verification_status_changed(env: &Env, did: &BytesN<32>, is_verified: bool) {
     let event = VerificationStatusChangedEvent {
-        did_address: did.clone(),
+        did_id: did.clone(),
         is_verified,
     };
     env.events()
