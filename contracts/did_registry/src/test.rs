@@ -151,6 +151,29 @@ fn test_create_did() {
 }
 
 #[test]
+fn test_get_did() {
+    let (env, _admin, client) = setup();
+    let user = Address::generate(&env);
+
+    let did = client.create_did(&user);
+    let record = client
+        .get_did(&did)
+        .expect("registered DID resolves to a record");
+
+    assert_eq!(record.did_id, did);
+    assert_eq!(record.owner, user);
+    assert_eq!(record.is_verified, false);
+}
+
+#[test]
+fn test_get_did_unknown() {
+    let (env, _admin, client) = setup();
+    let bogus = BytesN::<32>::random(&env);
+
+    assert!(client.get_did(&bogus).is_none());
+}
+
+#[test]
 fn test_create_did_distinct_owner_distinct_did() {
     let env = Env::default();
     env.mock_all_auths();

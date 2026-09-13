@@ -59,10 +59,10 @@ Stellar's Protocol 25 and 26 added ZK-friendly cryptographic primitives — BN25
 | Contract | Purpose | Status |
 |----------|---------|--------|
 | **did_registry** | Creates DIDs, links/unlinks wallets, manages wallet rotation. The foundation of Verity identity. | Implemented — DIDs are deterministic identifiers, all document mutations are wallet-owner gated |
-| **credential** | Stores credential hashes issued by approved KYC providers. Handles revocation. | Scaffolded — data structures and function signatures defined, implementation needed |
+| **credential** | Stores credential hashes issued by approved KYC providers. Handles revocation. | Implemented — issuance permissioned on-chain via cross-contract Issuer Registry check and bound to real DIDs; revocation is issuer-only |
 | **zk_verifier** | Verifies Noir-generated ZK proofs on-chain using BN254 host functions. | Stub — function signatures defined, implementation needed |
 | **nullifier** | Prevents same real-world identity from registering multiple DIDs (Sybil resistance). | Stub — function signatures defined, implementation needed |
-| **issuer_registry** | Admin-controlled registry of approved KYC provider addresses. | Stub — function signatures defined, implementation needed |
+| **issuer_registry** | Admin-controlled registry of approved KYC provider addresses. | In progress — admin registration, `add_issuer`, and the approval lookup live; `remove_issuer`/`get_all_issuers` open for contributors |
 
 ## Getting Started
 

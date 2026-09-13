@@ -1704,6 +1704,8 @@ name = "verity_credential"
 version = "0.0.0"
 dependencies = [
  "soroban-sdk",
+ "verity_did_registry",
+ "verity_issuer_registry",
 ]
 
 [[package]]
