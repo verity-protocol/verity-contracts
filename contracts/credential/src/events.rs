@@ -1,6 +1,6 @@
 #![allow(dead_code, deprecated)]
 
-use soroban_sdk::{contracttype, Address, Env, Symbol};
+use soroban_sdk::{contracttype, Address, BytesN, Env, Symbol};
 
 // ---------------------------------------------------------------------------
 // Event Types
@@ -10,8 +10,8 @@ use soroban_sdk::{contracttype, Address, Env, Symbol};
 #[contracttype]
 #[derive(Clone, Debug, PartialEq)]
 pub struct CredentialIssuedEvent {
-    /// The DID receiving the credential.
-    pub did: Address,
+    /// The DID identifier receiving the credential.
+    pub did: BytesN<32>,
     /// The issuer that issued the credential.
     pub issuer: Address,
     /// The type of credential issued.
@@ -24,8 +24,8 @@ pub struct CredentialIssuedEvent {
 #[contracttype]
 #[derive(Clone, Debug, PartialEq)]
 pub struct CredentialRevokedEvent {
-    /// The DID whose credential was revoked.
-    pub did: Address,
+    /// The DID identifier whose credential was revoked.
+    pub did: BytesN<32>,
     /// The issuer that revoked the credential.
     pub issuer: Address,
     /// The type of credential revoked.
@@ -39,7 +39,7 @@ pub struct CredentialRevokedEvent {
 #[allow(dead_code)]
 pub fn publish_credential_issued(
     env: &Env,
-    did: &Address,
+    did: &BytesN<32>,
     issuer: &Address,
     credential_type: &Symbol,
     issued_at: u64,
@@ -57,7 +57,7 @@ pub fn publish_credential_issued(
 #[allow(dead_code)]
 pub fn publish_credential_revoked(
     env: &Env,
-    did: &Address,
+    did: &BytesN<32>,
     issuer: &Address,
     credential_type: &Symbol,
 ) {

@@ -223,6 +223,16 @@ impl DidRegistry {
         storage::get_did_for_wallet(&env, &wallet)
     }
 
+    /// Resolve a DID's record by its identifier.
+    ///
+    /// Returns the full record if the DID exists, or `None` if it was never
+    /// created. This is the primary "does this DID exist" check — the
+    /// Credential contract cross-calls it to refuse issuing credentials to
+    /// invented identifiers.
+    pub fn get_did(env: Env, did: BytesN<32>) -> Option<storage::DidRecord> {
+        storage::get_did_record(&env, &did)
+    }
+
     /// Get all wallet addresses linked to a DID.
     ///
     /// Used by the frontend dashboard to show the user all their linked wallets.
